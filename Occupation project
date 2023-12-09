@@ -1,0 +1,15 @@
+SELECT
+  COALESCE(MAX(CASE WHEN occupation = 'Doctor' THEN name END), 'NULL') AS Doctor,
+  COALESCE(MAX(CASE WHEN occupation = 'Professor' THEN name END), 'NULL') AS Professor,
+  COALESCE(MAX(CASE WHEN occupation = 'Singer' THEN name END), 'NULL') AS Singer,
+  COALESCE(MAX(CASE WHEN occupation = 'Actor' THEN name END), 'NULL') AS Actor
+FROM (
+  SELECT
+    name,
+    occupation,
+    ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS ron
+  FROM
+    occupations
+) rn
+GROUP BY
+  ron;
